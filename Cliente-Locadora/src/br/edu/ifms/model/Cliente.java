@@ -1,9 +1,11 @@
 package br.edu.ifms.model;
 
-public class Cliente {
+import java.io.Serializable;
+
+public class Cliente implements Serializable{
 	private Long id;
 	private String nome;
-	private char[] categoriaHabilitacao;
+	private String categoriaHabilitacao;
 	
 	
 	public Long getId() {
@@ -18,11 +20,10 @@ public class Cliente {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public char[] getCategoriaHabilitacao() {
+	public String getCategoriaHabilitacao() {
 		return categoriaHabilitacao;
 	}
-	public void setCategoriaHabilitacao(char[] categoriaHabilitacao) {
+	public void setCategoriaHabilitacao(String categoriaHabilitacao) {
 		this.categoriaHabilitacao = categoriaHabilitacao;
 	}
-
 }

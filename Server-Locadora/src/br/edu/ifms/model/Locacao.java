@@ -1,8 +1,9 @@
 package br.edu.ifms.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Locacao {
+public class Locacao implements Serializable {
 	private Date horarioLocacao, horarioDevolucao;
 	private Double valor;
 	private Long clienteID, carroID, locadoraRetiradaID, locadoraDevolucaoID;

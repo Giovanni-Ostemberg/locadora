@@ -1,8 +1,9 @@
 package br.edu.ifms.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Carro {
+public class Carro implements Serializable {
 	private String placa;
 	private String nome;
 	private String restricao;

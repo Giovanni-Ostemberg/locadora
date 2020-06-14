@@ -1,11 +1,23 @@
 package br.edu.ifms.model;
 
-public class Locadora {
+import java.io.Serializable;
+
+public class Locadora implements Serializable {
 	private Long ID;
 	private String nome;
 	private String login;
 	private String senha;
 	
+	
+	
+	
+	public Locadora(Long iD, String nome, String login, String senha) {
+		super();
+		ID = iD;
+		this.nome = nome;
+		this.login = login;
+		this.senha = senha;
+	}
 	
 	public Long getID() {
 		return ID;
