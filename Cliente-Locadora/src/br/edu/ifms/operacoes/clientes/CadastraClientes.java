@@ -96,7 +96,8 @@ public class CadastraClientes extends JFrame implements ActionListener {
 		E.setForeground(Color.WHITE);
 		E.setBackground(Color.DARK_GRAY);
 		add(E);
-
+		
+		//Componentes Etiqueta do grupo das categorias
 		labelCat = new JLabel("Categorias");
 		labelCat.setBounds(50,120,100,20);
 		labelCat.setForeground(Color.WHITE);

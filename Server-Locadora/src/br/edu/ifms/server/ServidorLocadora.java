@@ -2,8 +2,11 @@ package br.edu.ifms.server;
 
 import java.io.IOException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.ArrayList;
+import java.util.List;
 
 import Armazenamento.Registros;
+import br.edu.ifms.model.Carro;
 import br.edu.ifms.model.Cliente;
 import br.edu.ifms.model.Locadora;
 
@@ -37,6 +40,22 @@ public class ServidorLocadora extends UnicastRemoteObject implements InterfaceSe
 		this.registros.getClientes().add(cliente);
 		this.registros.salvarRegistros();
 		return true;		
+	}
+
+
+
+
+
+
+	@Override
+	public List<Carro> listarCarrosDisponiveis() {
+		List<Carro> carrosDisponiveis = new ArrayList<Carro>();
+		for(Carro c : this.registros.getCarros()) {
+			if(c.getDisponibilidade()!=null) {
+				carrosDisponiveis.add(c);
+			}
+		}
+		return carrosDisponiveis;
 	}
 
 	

@@ -1,13 +1,25 @@
 package br.edu.ifms.model;
 
-import java.util.List;
+import java.io.Serializable;
 
-public class Carro {
+public class Carro implements Serializable {
 	private String placa;
 	private String nome;
 	private String restricao;
-	private List<Locadora> disponibilidade;
+	private Locadora disponibilidade;
 	private Double precoPorSegundo;
+	
+	
+	
+	
+	public Carro(String placa, String nome, String restricao, Locadora disponibilidade, Double precoPorSegundo) {
+		super();
+		this.placa = placa;
+		this.nome = nome;
+		this.restricao = restricao;
+		this.disponibilidade = disponibilidade;
+		this.precoPorSegundo = precoPorSegundo;
+	}
 	
 	
 	public String getPlaca() {
@@ -28,19 +40,19 @@ public class Carro {
 	public void setRestricao(String restricao) {
 		this.restricao = restricao;
 	}
-	public List<Locadora> getDisponibilidade() {
-		return disponibilidade;
-	}
-	public void setDisponibilidade(List<Locadora> disponibilidade) {
-		this.disponibilidade = disponibilidade;
-	}
 	public Double getPrecoPorSegundo() {
 		return precoPorSegundo;
 	}
 	public void setPrecoPorSegundo(Double precoPorSegundo) {
 		this.precoPorSegundo = precoPorSegundo;
 	}
+	public Locadora getDisponibilidade() {
+		return disponibilidade;
+	}
+	public void setDisponibilidade(Locadora disponibilidade) {
+		this.disponibilidade = disponibilidade;
+	}
 	
 	
-
+	
 }

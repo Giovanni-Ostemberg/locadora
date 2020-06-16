@@ -31,11 +31,8 @@ public class Registros implements Serializable {
 		
 		//Locadora l = new Locadora((long) 1, "admin", "admin", "admin");
 		Registros registros = new Registros();
-		/*registros.locadoras.add(l);
-		
-		
-		
-		salvarRegistros();*/
+		//registros.locadoras.add(l);	
+		//salvarRegistros();
 		
 		
 		ObjectInputStream in = null;
@@ -99,7 +96,7 @@ public class Registros implements Serializable {
 		}	
 		return null;
 	}
-
+	
 	public ArrayList<Carro> getCarros() {
 		return carros;
 	}
