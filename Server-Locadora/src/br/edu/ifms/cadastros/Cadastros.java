@@ -105,8 +105,8 @@ public class Cadastros {
 		String nome = ler.nextLine();
 
 		System.out.println("Login > ");
-		ler.nextLine();
 		String login = ler.nextLine();
+		
 		System.out.println("Senha > ");
 		String senha = ler.nextLine();
 		System.out.println("ID > ");

@@ -1,6 +1,7 @@
 package br.edu.ifms.server;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import Armazenamento.Registros;
 import br.edu.ifms.model.Carro;
 import br.edu.ifms.model.Cliente;
+import br.edu.ifms.model.Locacao;
 import br.edu.ifms.model.Locadora;
 
 public class ServidorLocadora extends UnicastRemoteObject implements InterfaceServidorLocadora {
@@ -35,7 +37,7 @@ public class ServidorLocadora extends UnicastRemoteObject implements InterfaceSe
 			return false;
 		}	
 	}
-	
+
 	public boolean cadastrarCliente(Cliente cliente) {
 		this.registros.getClientes().add(cliente);
 		this.registros.salvarRegistros();
@@ -58,7 +60,49 @@ public class ServidorLocadora extends UnicastRemoteObject implements InterfaceSe
 		return carrosDisponiveis;
 	}
 
-	
-	
+
+
+
+
+
+	@Override
+	public List<Locadora> listarLocadoras() throws RemoteException, ClassNotFoundException {
+		List<Locadora> locadoras = new ArrayList<Locadora>();	
+		for(Locadora l : this.registros.getLocadoras()) {
+			locadoras.add(l);
+		}
+		return locadoras;
+	}
+
+
+
+
+
+
+	@Override
+	public List<Cliente> listarClientes() throws RemoteException, ClassNotFoundException {
+		List<Cliente> clientes = new ArrayList<>();
+		for(Cliente c : this.registros.getClientes()) {
+			clientes.add(c);
+		}
+		return clientes;
+	}
+
+
+
+
+
+
+	@Override
+	public List<Locacao> listarLocacoes() throws RemoteException, ClassNotFoundException {
+		List<Locacao> locacoes = new ArrayList<>();
+		for(Locacao l : this.registros.getLocacoes()) {
+			locacoes.add(l);
+		}
+		return locacoes;
+	}
+
+
+
 
 }

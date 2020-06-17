@@ -111,10 +111,8 @@ public class Client extends JFrame implements ActionListener  {
 		}else {
 			Client c = new Client(sessaoIniciada);
 			c.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			//c.getContentPane().setBackground(Color.DARK_GRAY);
 			c.setResizable(false);
 			c.setSize(350,480);
-			//c.setVisible(false);
 			c.setLocationRelativeTo(null);
 		}
 	}

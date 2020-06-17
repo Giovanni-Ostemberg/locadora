@@ -30,7 +30,7 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 	
 	private InterfaceServidorLocadora msi;
 
-
+	//Esta classe é responsável por listar em um combo box os carros disponíveis e apresentar seus dados ao usuário
 	public ListarCarrosDisponiveis(String login) throws RemoteException, ClassNotFoundException {
 		this.login = login;
 		
@@ -153,6 +153,7 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 				String placa = comboCarros.getSelectedItem().toString();
 				placa = placa.substring(placa.lastIndexOf(" ")+1);
 				System.out.println(placa);
+			
 				
 				for(Carro c : carrosDisponiveis) {
 					if(c.getPlaca().equals(placa)) {
