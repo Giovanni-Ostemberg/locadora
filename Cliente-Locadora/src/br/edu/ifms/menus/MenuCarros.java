@@ -11,7 +11,6 @@ import javax.swing.JFrame;
 import br.edu.ifms.operacoes.carros.ListarCarrosDisponiveis;
 import br.edu.ifms.operacoes.carros.ListarCarrosDisponiveisPorLocadora;
 import br.edu.ifms.operacoes.clientes.CadastraClientes;
-import br.edu.ifms.server.MenuPrincipal;
 
 public class MenuCarros extends JFrame implements ActionListener {
 

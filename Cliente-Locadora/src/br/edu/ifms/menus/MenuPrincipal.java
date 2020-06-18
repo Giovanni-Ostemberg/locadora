@@ -1,4 +1,4 @@
-package br.edu.ifms.server;
+package br.edu.ifms.menus;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -7,14 +7,13 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-import br.edu.ifms.menus.MenuCarros;
-import br.edu.ifms.menus.MenuClientes;
+import br.edu.ifms.operacoes.locacoes.ListarLocacoes;
 
 public class MenuPrincipal extends JFrame implements ActionListener {
 	
 	String login;
 	JButton botaoClientes;
-	JButton botaoCarros, botaoLocadoras;
+	JButton botaoCarros, botaoLocacoes;
 
 	
 	public MenuPrincipal(String login) {
@@ -25,25 +24,26 @@ public class MenuPrincipal extends JFrame implements ActionListener {
 		
 		
 		botaoClientes = new JButton("Clientes");
-		botaoClientes.setBounds(120,40,100,20);
+		botaoClientes.setBounds(70,40,200,20);
 		botaoClientes.setToolTipText("Menu de clientes");
 		botaoClientes.setForeground(Color.RED);
 		botaoClientes.addActionListener(this);
 		add(botaoClientes);
 		
 		botaoCarros = new JButton("Carros");
-		botaoCarros.setBounds(120,80,100,20);
+		botaoCarros.setBounds(70,80,200,20);
 		botaoCarros.setToolTipText("Menu de carros");
 		botaoCarros.setForeground(Color.RED);
 		botaoCarros.addActionListener(this);
 		add(botaoCarros);
 		
-		botaoLocadoras = new JButton("Locadoras");
-		botaoLocadoras.setBounds(120,120,100,20);
-		botaoLocadoras.setToolTipText("Menu de locadoras");
-		botaoLocadoras.setForeground(Color.RED);
-		botaoLocadoras.addActionListener(this);
-		add(botaoCarros);
+		botaoLocacoes = new JButton("Locações");
+		botaoLocacoes.setBounds(70,120,200,20);
+		botaoLocacoes.setToolTipText("Pesquisar Locações");
+		botaoLocacoes.setForeground(Color.RED);
+		botaoLocacoes.addActionListener(this);
+		add(botaoLocacoes);
+		
 		
 	}
 
@@ -74,6 +74,12 @@ public class MenuPrincipal extends JFrame implements ActionListener {
 				MenuCarros menuCarros = new MenuCarros(this.login);
 				menuCarros.showMenuCarros();
 				this.dispose();
+			}else {
+				if(e.getSource() == this.botaoLocacoes) {
+					ListarLocacoes listaLocacoes = new ListarLocacoes(login);
+					listaLocacoes.listar();
+					this.dispose();
+				}
 			}
 		}
 		

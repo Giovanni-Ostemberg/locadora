@@ -191,10 +191,10 @@ public class PesquisarClientesPorNome extends JFrame  implements ActionListener 
 							//Testa se o cliente possui uma locacão em aberto
 							boolean testeLocacao = false;
 							for(Locacao loc : locacoes) {
-								if(clienteSelecionado.getId().equals(loc.getClienteID()) && loc.getHorarioDevolucao()!=null) {
+								System.out.println("Locação encontrada: " + clienteSelecionado.getId().equals((long)loc.getClienteID()) );
+								if(clienteSelecionado.getId().equals((long)loc.getClienteID()) && loc.getHorarioDevolucao()==null) {
 									testeLocacao = true;
-									JOptionPane.showConfirmDialog(null, "Este cliente possui uma locação em aberto!");
-									
+									JOptionPane.showMessageDialog(null, "Este cliente já possui uma locação em aberto!");									
 								}
 
 							}

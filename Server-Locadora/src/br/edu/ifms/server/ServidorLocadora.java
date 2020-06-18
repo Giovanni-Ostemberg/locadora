@@ -105,4 +105,46 @@ public class ServidorLocadora extends UnicastRemoteObject implements InterfaceSe
 
 
 
+
+
+	@Override
+	public List<Carro> listarTodosCarros() throws RemoteException, ClassNotFoundException {
+		return this.registros.getCarros();
+	}
+
+
+
+
+
+
+	@Override
+	public boolean novaLocacao(Locacao locacao, Carro carro) throws RemoteException, ClassNotFoundException, IOException {
+		
+		Carro carroAtualizado = null;
+		int index = -1;
+		//Atualizando a disponibilidade do carro
+		for(Carro c : this.registros.getCarros()) {
+			if(c.getPlaca().equals(carro.getPlaca())){
+				index =this.registros.getCarros().indexOf(carro);
+				carroAtualizado = c;
+				}
+		}
+		
+		
+		carroAtualizado.setDisponibilidade(null);
+		if(index != -1) {
+		this.registros.getCarros().add(index, carroAtualizado);
+		}else {
+			System.out.println("Falha ao encontrar o carro nos registros");
+		}
+		
+		//adicionando locação e o carro atualizado aos registros
+		this.registros.getLocacoes().add(locacao);
+		this.registros.salvarRegistros();
+		return false;
+	}
+
+
+
+
 }

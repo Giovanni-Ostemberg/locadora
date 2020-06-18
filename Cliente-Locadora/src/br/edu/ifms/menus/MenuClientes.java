@@ -10,7 +10,6 @@ import javax.swing.JFrame;
 
 import br.edu.ifms.operacoes.clientes.CadastraClientes;
 import br.edu.ifms.operacoes.clientes.PesquisarClientesPorNome;
-import br.edu.ifms.server.MenuPrincipal;
 
 public class MenuClientes extends JFrame implements ActionListener {
 	

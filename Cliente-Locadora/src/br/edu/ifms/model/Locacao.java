@@ -1,12 +1,14 @@
 package br.edu.ifms.model;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 public class Locacao implements Serializable {
 	private Date horarioLocacao, horarioDevolucao;
 	private Double valor;
-	private Long clienteID, carroID, locadoraRetiradaID, locadoraDevolucaoID;
+	private Long clienteID, locadoraRetiradaID, locadoraDevolucaoID;
+	private String carroID;
 	
 	
 	public Date getHorarioLocacao() {
@@ -33,10 +35,10 @@ public class Locacao implements Serializable {
 	public void setClienteID(Long clienteID) {
 		this.clienteID = clienteID;
 	}
-	public Long getCarroID() {
+	public String getCarroID() {
 		return carroID;
 	}
-	public void setCarroID(Long carroID) {
+	public void setCarroID(String carroID) {
 		this.carroID = carroID;
 	}
 	public Long getLocadoraRetiradaID() {

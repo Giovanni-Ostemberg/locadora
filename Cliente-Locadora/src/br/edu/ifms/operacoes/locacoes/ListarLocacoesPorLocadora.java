@@ -1,4 +1,4 @@
-package br.edu.ifms.operacoes.clientes;
+package br.edu.ifms.operacoes.locacoes;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -13,46 +13,45 @@ import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextField;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
-import br.edu.ifms.menus.MenuClientes;
 import br.edu.ifms.model.Carro;
 import br.edu.ifms.model.Cliente;
 import br.edu.ifms.model.Locacao;
 import br.edu.ifms.model.Locadora;
-import br.edu.ifms.operacoes.locacoes.CadastrarNovaLocacao;
-import br.edu.ifms.operacoes.locacoes.ListarLocacoesPorCliente;
 import br.edu.ifms.server.InterfaceServidorLocadora;
 
-public class ListarCarrosDisponiveisPorCliente extends JFrame  implements ActionListener  {
+public class ListarLocacoesPorLocadora extends JFrame  implements ActionListener {
 
 	private String login;
 	JButton botaoVoltar;
 	JComboBox<String> comboLocadoras;
-	List<Carro> carrosDisponiveis = new ArrayList<Carro>();
+	List<Carro> carros = new ArrayList<Carro>();
+	List<Locacao> locacoes = new ArrayList<Locacao>();
 	List<Locadora> locadoras = new ArrayList<Locadora>();
+	List<Cliente> clientes = new ArrayList<>();
+	Locadora locadoraSelecionada, locadora;
+	Locacao locSelecionada;
+	Carro carroSelecionado;
+	Cliente clienteSelecionado = null;
 	JTable table = new JTable();
-	Locadora locadoraSelecionada;
-	Cliente clienteSelecionado;
 	ButtonGroup listaCarros = new ButtonGroup();
-	String col[] = {"Carro", "Placa", "restrição"};
+	String col[] = {"Placa", "Carro", "Cliente", "ID"};
 	DefaultTableModel modeloTabela = new DefaultTableModel(col,0);
 	JScrollPane painel = new JScrollPane();
 
 
 	private InterfaceServidorLocadora msi;
 
-	public ListarCarrosDisponiveisPorCliente(String login, Cliente cliente) throws RemoteException, ClassNotFoundException {
-		this.login = login;
-		this.clienteSelecionado = cliente;
+	public ListarLocacoesPorLocadora(String login, Locadora locadora) throws RemoteException, ClassNotFoundException {
+		this.login = login;	
+		this.locadora = locadora;
 
 		setLayout(null);
 
@@ -71,12 +70,8 @@ public class ListarCarrosDisponiveisPorCliente extends JFrame  implements Action
 			System.exit(0);
 		}
 
-		this.locadoras = msi.listarLocadoras();
-		for(Locadora l : locadoras) {
-			if(l.getLogin().equals(this.login)) {
-				this.locadoraSelecionada = l;
-			}
-		}
+		this.carros = msi.listarTodosCarros();
+		this.clientes = msi.listarClientes();
 
 		//Apresentação Gráfica da Tabela
 		table = new JTable(modeloTabela);
@@ -98,21 +93,22 @@ public class ListarCarrosDisponiveisPorCliente extends JFrame  implements Action
 		painel.setBackground(Color.DARK_GRAY);
 		add(painel);
 
-		try {
-			carrosDisponiveis = msi.listarCarrosDisponiveis();
-		} catch (RemoteException e1) {
-			e1.printStackTrace();
-		} catch (ClassNotFoundException e1) {
-			e1.printStackTrace();
-		}
-
 		boolean teste = false;
-		for(Carro c : carrosDisponiveis) {
-			if(((long)c.getDisponibilidade().getID() == this.locadoraSelecionada.getID()) && cliente.getCategoriaHabilitacao().contains(c.getRestricao())) {
 
-				teste = true;
-				Object[] linha = {c.getPlaca(),c.getNome(),c.getRestricao()};
-				this.modeloTabela.addRow(linha);
+		locacoes = msi.listarLocacoes();
+		int index;
+		for(Locacao loc : locacoes) {
+			System.out.println(loc.getClienteID().equals((long)locadora.getID()));
+			if(loc.getLocadoraRetiradaID().equals((long)locadora.getID())) {
+				Carro carroLocado;
+				for(Carro c : this.msi.listarTodosCarros()) {
+					if(c.getPlaca().equals(loc.getCarroID())){
+						carroLocado = c;
+						Object[] linha = {c.getPlaca(),c.getNome(), loc.getClienteID(),locacoes.indexOf(loc)};
+						this.modeloTabela.addRow(linha);
+
+					}
+				}
 
 			}
 		}
@@ -125,54 +121,58 @@ public class ListarCarrosDisponiveisPorCliente extends JFrame  implements Action
 		botaoVoltar.addActionListener(this);
 		add(botaoVoltar);
 
-
+		//Ao clicar na linha, exibe as informações da locação na tela, para o usuário
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
-				Carro carroSelecionado = null;
+
 				if (table.getSelectedRow() > -1) {
 
-					System.out.println(table.getValueAt(table.getSelectedRow(), 0).toString());
-					ListarLocacoesPorCliente listar = null;
 
-					for(Carro c : carrosDisponiveis) {
-						if(c.getPlaca()==table.getValueAt(table.getSelectedRow(), 0)){
+					for(Carro c : carros) {
+						if(c.getPlaca().equals(table.getValueAt(table.getSelectedRow(), 0).toString())){
 							carroSelecionado = c;
-							CadastrarNovaLocacao nova = new CadastrarNovaLocacao(clienteSelecionado, locadoraSelecionada,carroSelecionado);
-							nova.cadastro();
-							dispose();
+							
 						}
 
 					}
+					for(Cliente cli :  clientes) {
+						if(cli.getId().equals((long)table.getValueAt(table.getSelectedRow(), 2))) {
+							clienteSelecionado = cli;
+						}
+					}
 
+					locSelecionada = locacoes.get((int)table.getValueAt(table.getSelectedRow(), 3));
+
+					String mensagem = ("Carro > " + locSelecionada.getCarroID()+ " - " + carroSelecionado.getPlaca()+ ""
+							+ "\nCliente: " + clienteSelecionado.getNome()+ "\nRetirada:\n\tLocadora > " +
+							locadora.getNome() +"\n\tHorário: " + locSelecionada.getHorarioLocacao());
+							JOptionPane.showMessageDialog(null, mensagem);
 				}
+				/*private Date horarioLocacao, horarioDevolucao;
+	private Double valor;
+	private Long clienteID, locadoraRetiradaID, locadoraDevolucaoID;
+	private String carroID;*/
+
 
 			}
 		});
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == botaoVoltar) {
-			PesquisarClientesPorNome listaClientes = null;
-			try {
-				listaClientes = new PesquisarClientesPorNome(this.login);
-			} catch (RemoteException e1) {
-				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-			listaClientes.showLista();
+			ListarLocacoes listaLocacoes = null;
+			listaLocacoes = new ListarLocacoes(this.login);
+			listaLocacoes.listar();
 			this.dispose();
 
 		}else {
-			//if(e.getSource())
 
 		}
 	}
 
-	public void listarCarros() {
+	public void listarLocacoes() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setBackground(Color.DARK_GRAY);
 		setResizable(false);
@@ -180,5 +180,6 @@ public class ListarCarrosDisponiveisPorCliente extends JFrame  implements Action
 		setVisible(true);
 		setLocationRelativeTo(null);		
 	}
+
 
 }

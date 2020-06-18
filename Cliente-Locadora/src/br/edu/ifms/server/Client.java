@@ -17,6 +17,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import br.edu.ifms.menus.MenuPrincipal;
+
 public class Client extends JFrame implements ActionListener  {
 
 	private static final long serialVersionUID = 1L;
