@@ -1,11 +1,13 @@
 package br.edu.ifms.cadastros;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 import Armazenamento.Registros;
 import br.edu.ifms.model.Carro;
+import br.edu.ifms.model.Locacao;
 import br.edu.ifms.model.Locadora;
 
 public class Cadastros {
@@ -18,7 +20,7 @@ public class Cadastros {
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		System.out.println("Bem-vindo!\nInforme a operação desejada:\n1 - Cadastro de carros\n2 - Cadastro de locadoras\n3 - Sair");
 		int opt = ler.nextInt();
-		while(opt!=3) {
+		while(opt!=4) {
 			switch(opt) {
 			case 1:
 				CadastrarCarros();
@@ -29,6 +31,10 @@ public class Cadastros {
 				break;
 
 			case 3:
+				r.setLocacoes(new ArrayList<Locacao>());
+				r.setCarros(new ArrayList<Carro>());
+				r.salvarRegistros();
+
 				break;
 			}
 
@@ -55,13 +61,15 @@ public class Cadastros {
 		//Checa se a Placa do novo carro ainda está disponível
 		while(teste == false) {
 			teste = true;
-			for(Carro c : carros) {
-				if(placa.equals(c.getPlaca()) ) {
-					teste=false;
-					System.out.println("Placa já existente, informe nova!");
-					System.out.println("Placa > ");
-					placa = ler.nextLine();
-				}				
+			if(carros!=null) {
+				for(Carro c : carros) {
+					if(placa.equals(c.getPlaca()) ) {
+						teste=false;
+						System.out.println("Placa já existente, informe nova!");
+						System.out.println("Placa > ");
+						placa = ler.nextLine();
+					}				
+				}
 			}
 		}
 
@@ -106,7 +114,7 @@ public class Cadastros {
 
 		System.out.println("Login > ");
 		String login = ler.nextLine();
-		
+
 		System.out.println("Senha > ");
 		String senha = ler.nextLine();
 		System.out.println("ID > ");

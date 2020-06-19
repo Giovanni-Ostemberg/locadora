@@ -38,9 +38,10 @@ public class ServidorLocadora extends UnicastRemoteObject implements InterfaceSe
 		}	
 	}
 
-	public boolean cadastrarCliente(Cliente cliente) {
+	public boolean cadastrarCliente(Cliente cliente) throws ClassNotFoundException, IOException {
 		this.registros.getClientes().add(cliente);
 		this.registros.salvarRegistros();
+		this.registros.recuperarRegistros();
 		return true;		
 	}
 
@@ -119,28 +120,87 @@ public class ServidorLocadora extends UnicastRemoteObject implements InterfaceSe
 
 	@Override
 	public boolean novaLocacao(Locacao locacao, Carro carro) throws RemoteException, ClassNotFoundException, IOException {
-		
+		ArrayList<Carro> novaListaCarros =this.registros.getCarros();
 		Carro carroAtualizado = null;
-		int index = -1;
-		//Atualizando a disponibilidade do carro
-		for(Carro c : this.registros.getCarros()) {
+		Carro carroDesatualizado = null;
+
+	
+		for(Carro c : novaListaCarros) {
 			if(c.getPlaca().equals(carro.getPlaca())){
-				index =this.registros.getCarros().indexOf(carro);
-				carroAtualizado = c;
-				}
+				carroDesatualizado = c;
+			}
 		}
-		
-		
+
+		novaListaCarros.remove(carroDesatualizado);
+		carroAtualizado = carro;
 		carroAtualizado.setDisponibilidade(null);
-		if(index != -1) {
-		this.registros.getCarros().add(index, carroAtualizado);
-		}else {
-			System.out.println("Falha ao encontrar o carro nos registros");
-		}
-		
+		novaListaCarros.add(carroAtualizado);
+		this.registros.setCarros(novaListaCarros);
+
 		//adicionando locação e o carro atualizado aos registros
 		this.registros.getLocacoes().add(locacao);
 		this.registros.salvarRegistros();
+		this.registros.recuperarRegistros();
+		return false;
+	}
+
+
+
+
+
+
+	@Override
+	public boolean devolucao(Locacao locacao, Locadora locadora) throws RemoteException, ClassNotFoundException, IOException {
+		List<Locacao> locacoesAbertas = new ArrayList<Locacao>();
+		ArrayList<Locacao> locacoes = this.registros.getLocacoes();
+		Locacao locacaoSelecionada = null;
+		int index = -1;
+		Carro carroAtualizado = null;
+
+
+
+		for(Locacao loc : locacoes) {
+			System.out.println(loc.getLocadoraDevolucaoID() == null);
+			if(loc.getLocadoraDevolucaoID() == null) {
+				locacoesAbertas.add(loc);
+			}
+		}
+
+		for(Locacao locAberta : locacoesAbertas) {
+			if(locAberta.getCarroID().equals(locacao.getCarroID())) {			
+				locacoes.remove(locAberta);
+				locacaoSelecionada = locacao;		
+			}
+		}
+		
+
+		locacoes.add(locacaoSelecionada);
+		
+
+		ArrayList<Carro> novaListaCarros =this.registros.getCarros();
+		
+		//Atualizando a disponibilidade do carro
+		for(Carro c : this.registros.getCarros()) {
+			if(c.getPlaca().equals(locacaoSelecionada.getCarroID())){
+				novaListaCarros.remove(c);
+				carroAtualizado = c;
+				break;
+			}
+		}
+
+
+		carroAtualizado.setDisponibilidade(locadora);
+		novaListaCarros.add(carroAtualizado);
+		this.registros.setCarros(novaListaCarros);
+		this.registros.setLocacoes(locacoes);
+
+
+		
+		
+
+
+		this.registros.salvarRegistros();
+		this.registros.recuperarRegistros();
 		return false;
 	}
 

@@ -225,14 +225,7 @@ public class ListarLocacoes extends JFrame  implements ActionListener   {
 
 								//Testa se o cliente possui uma locacão em aberto
 								boolean testeLocacao = false;
-								for(Locacao loc : locacoes) {
-									if(clienteSelecionado.getId().equals(loc.getClienteID()) && loc.getHorarioDevolucao()!=null) {
-										testeLocacao = true;
-										JOptionPane.showConfirmDialog(null, "Este cliente possui uma locação em aberto!");
-
-									}
-
-								}
+								
 								if(testeLocacao==false) {
 									try {
 										listar = new ListarLocacoesPorCliente(login, clienteSelecionado);

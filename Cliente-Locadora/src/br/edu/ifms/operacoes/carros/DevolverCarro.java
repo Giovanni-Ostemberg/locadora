@@ -3,10 +3,12 @@ package br.edu.ifms.operacoes.carros;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -17,21 +19,27 @@ import javax.swing.JTextField;
 
 import br.edu.ifms.menus.MenuCarros;
 import br.edu.ifms.model.Carro;
+import br.edu.ifms.model.Cliente;
+import br.edu.ifms.model.Locacao;
+import br.edu.ifms.model.Locadora;
 import br.edu.ifms.server.InterfaceServidorLocadora;
 
-public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
+public class DevolverCarro  extends JFrame implements ActionListener  {
 	
-	JButton botaoVoltar, botaoPesquisar;
+	
+	JButton botaoVoltar, botaoPesquisar, botaoDevolucao;
 	JComboBox<String> comboCarros;
-	private JLabel labelNome, labelId, labelCat, labelLocadora, labelPreco;
-	private JTextField textNome, textId, textLocadora, textCat, textPreco;
+	private JLabel labelNome, labelId, labelCat, labelCliente, labelPreco;
+	private JTextField textNome, textId, textCliente, textLocadoraRetirada, textPreco;
 	String login;
-	List<Carro> carrosDisponiveis = new ArrayList<Carro>();
+	List<Carro> carrosLocados = new ArrayList<Carro>();
+	List<Locacao> locacoesEmAberto = new ArrayList<Locacao>();
+	List<Cliente> clientes = new ArrayList<Cliente>();
+	Locacao locacaoSelecionada;
+	Locadora locadoraDevolucao;
 	
 	private InterfaceServidorLocadora msi;
-
-	//Esta classe é responsável por listar em um combo box os carros disponíveis e apresentar seus dados ao usuário
-	public ListarCarrosDisponiveis(String login) throws RemoteException, ClassNotFoundException {
+	public DevolverCarro(String login) throws RemoteException, ClassNotFoundException {
 		this.login = login;
 		
 		setLayout(null);
@@ -61,29 +69,29 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 		add(textId);
 		add(labelId);
 		
-		labelLocadora = new JLabel("Locadora: ");
-		textLocadora = new JTextField("");
-		textLocadora.setBounds(150,140,100,20);
-		textLocadora.setForeground(Color.white);
-		textLocadora.setBackground(Color.DARK_GRAY);
-		labelLocadora.setBounds(50,140,100,20);
-		labelLocadora.setForeground(Color.white);
-		labelLocadora.setBackground(Color.DARK_GRAY);
-		add(textLocadora);
-		add(labelLocadora);
+		labelCliente = new JLabel("Cliente: ");
+		textCliente = new JTextField("");
+		textCliente.setBounds(150,140,100,20);
+		textCliente.setForeground(Color.white);
+		textCliente.setBackground(Color.DARK_GRAY);
+		labelCliente.setBounds(50,140,100,20);
+		labelCliente.setForeground(Color.white);
+		labelCliente.setBackground(Color.DARK_GRAY);
+		add(textCliente);
+		add(labelCliente);
 
 
 
 		//Componentes restrição
-		labelCat = new JLabel("Hab.: ");
-		textCat = new JTextField("");
-		textCat.setBounds(90,180,50,20);
-		textCat.setForeground(Color.white);
-		textCat.setBackground(Color.DARK_GRAY);
+		labelCat = new JLabel("Loc. Ret.: ");
+		textLocadoraRetirada = new JTextField("");
+		textLocadoraRetirada.setBounds(90,180,50,20);
+		textLocadoraRetirada.setForeground(Color.white);
+		textLocadoraRetirada.setBackground(Color.DARK_GRAY);
 		labelCat.setBounds(50,180,50,20);
 		labelCat.setForeground(Color.white);
 		labelCat.setBackground(Color.DARK_GRAY);
-		add(textCat);
+		add(textLocadoraRetirada);
 		add(labelCat);
 		
 		//Componentes Preço
@@ -97,6 +105,8 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 		labelPreco.setBackground(Color.DARK_GRAY);
 		add(textPreco);
 		add(labelPreco);
+		
+		
 		
 		
 		
@@ -116,10 +126,12 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 			System.exit(0);
 		}
 		
-		this.carrosDisponiveis = msi.listarCarrosDisponiveis();
+		this.carrosLocados = msi.listarTodosCarros();
 		comboCarros = new JComboBox<String>();
-		for(Carro c : carrosDisponiveis) {
+		for(Carro c : carrosLocados) {
+			if(c.getDisponibilidade()==null) {
 			comboCarros.addItem(c.getNome() + " - " + c.getPlaca());
+			}
 		}
 		comboCarros.setBounds(10,20,150,20);
 	   add(comboCarros);
@@ -138,6 +150,28 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 		botaoVoltar.addActionListener(this);
 		add(botaoVoltar);
 		
+		botaoDevolucao = new JButton("Registrar Devolução");
+		botaoDevolucao.setBounds(200,250,100,20);
+		botaoDevolucao.setForeground(Color.WHITE);
+		botaoDevolucao.setBackground(Color.GREEN);
+		botaoDevolucao.addActionListener(this);
+		add(botaoDevolucao);
+		
+		for(Locacao loc : msi.listarLocacoes()) {
+			if(loc.getLocadoraDevolucaoID()==null) {
+				locacoesEmAberto.add(loc);
+			}
+		}
+		
+		for(Locadora l : msi.listarLocadoras()) {
+			if(l.getLogin().equals(this.login)) {
+				System.out.println("Locadora: " + l.getNome());
+				locadoraDevolucao = l;
+			}
+		}
+		
+		this.clientes = msi.listarClientes();
+		
 	}
 	
 	
@@ -152,23 +186,44 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 			if(e.getSource() == botaoPesquisar) {			
 				String placa = comboCarros.getSelectedItem().toString();
 				placa = placa.substring(placa.lastIndexOf(" ")+1);
-				System.out.println(placa);
-			
 				
-				for(Carro c : carrosDisponiveis) {
+			
+				Carro selecionado = null;
+				for(Carro c : carrosLocados) {
+	
 					if(c.getPlaca().equals(placa)) {
 						System.out.println("Carro encontrado" + c.getPlaca());
 						this.textPreco.setText(c.getPrecoPorSegundo().toString());
 						this.textId.setText(c.getPlaca());
 						this.textNome.setText(c.getNome());
-						this.textLocadora.setText(c.getDisponibilidade().getNome());
-						this.textCat.setText(c.getRestricao());
+						selecionado = c;
 					}
 				}
 				
-
+				for(Locacao loc2 : locacoesEmAberto) {
+					if(loc2.getCarroID().equals(selecionado.getPlaca())) {
+						locacaoSelecionada = loc2;
+						
+						this.textLocadoraRetirada.setText(loc2.getLocadoraRetiradaID().toString());
+						for(Cliente c : clientes) {
+							if(c.getId().equals(loc2.getClienteID())) {
+								this.textCliente.setText(c.getNome());
+							}
+						}				
+					}
+				}
+			}else {
+				if(e.getSource() == botaoDevolucao) {
+					System.out.println(locadoraDevolucao.getID());
+					locacaoSelecionada.setLocadoraDevolucaoID(locadoraDevolucao.getID());
+					locacaoSelecionada.setHorarioDevolucao(new Date());
+					try {
+						msi.devolucao(locacaoSelecionada, locadoraDevolucao);
+					} catch (ClassNotFoundException | IOException e1) {
+						e1.printStackTrace();
+					}
+				}
 			}
-			
 		}
 	}
 
@@ -181,5 +236,6 @@ public class ListarCarrosDisponiveis extends JFrame implements ActionListener {
 		setVisible(true);
 		setLocationRelativeTo(null);
 	}
+
 
 }

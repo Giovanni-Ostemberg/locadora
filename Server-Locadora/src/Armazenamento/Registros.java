@@ -55,7 +55,7 @@ public class Registros implements Serializable {
 
 
 	//Método que salva o estado atual da classe para o arquivo 
-	public void salvarRegistros() {
+	public void salvarRegistros() throws ClassNotFoundException, IOException {
 		
 		for(Cliente c : this.clientes) {
 			System.out.println(c.getNome() + " | " + c.getId() + " | " + c.getCategoriaHabilitacao());
@@ -81,6 +81,8 @@ public class Registros implements Serializable {
 		} catch (Exception e) {
 			System.out.println("Não foi possível encontrar o arquivo");
 		}
+		
+		recuperarRegistros();
 
 	}
 	

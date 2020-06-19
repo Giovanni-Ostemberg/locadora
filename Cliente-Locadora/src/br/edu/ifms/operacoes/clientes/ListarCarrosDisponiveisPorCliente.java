@@ -108,7 +108,7 @@ public class ListarCarrosDisponiveisPorCliente extends JFrame  implements Action
 
 		boolean teste = false;
 		for(Carro c : carrosDisponiveis) {
-			if(((long)c.getDisponibilidade().getID() == this.locadoraSelecionada.getID()) && cliente.getCategoriaHabilitacao().contains(c.getRestricao())) {
+			if(c.getDisponibilidade().getID().equals(this.locadoraSelecionada.getID()) && cliente.getCategoriaHabilitacao().contains(c.getRestricao())) {
 
 				teste = true;
 				Object[] linha = {c.getPlaca(),c.getNome(),c.getRestricao()};

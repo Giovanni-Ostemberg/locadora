@@ -192,7 +192,8 @@ public class PesquisarClientesPorNome extends JFrame  implements ActionListener 
 							boolean testeLocacao = false;
 							for(Locacao loc : locacoes) {
 								System.out.println("Locação encontrada: " + clienteSelecionado.getId().equals((long)loc.getClienteID()) );
-								if(clienteSelecionado.getId().equals((long)loc.getClienteID()) && loc.getHorarioDevolucao()==null) {
+								System.out.println(loc.getLocadoraDevolucaoID());
+								if(clienteSelecionado.getId().equals((long)loc.getClienteID()) && loc.getLocadoraDevolucaoID()==null) {
 									testeLocacao = true;
 									JOptionPane.showMessageDialog(null, "Este cliente já possui uma locação em aberto!");									
 								}

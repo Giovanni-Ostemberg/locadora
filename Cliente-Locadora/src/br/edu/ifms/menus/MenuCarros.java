@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
+import br.edu.ifms.operacoes.carros.DevolverCarro;
 import br.edu.ifms.operacoes.carros.ListarCarrosDisponiveis;
 import br.edu.ifms.operacoes.carros.ListarCarrosDisponiveisPorLocadora;
-import br.edu.ifms.operacoes.clientes.CadastraClientes;
 
 public class MenuCarros extends JFrame implements ActionListener {
 
@@ -100,6 +100,18 @@ public class MenuCarros extends JFrame implements ActionListener {
 					carrosPorLocadora.listar();
 					this.dispose();
 
+				}else {
+					if(e.getSource() == this.botaoDevolucao) {
+						DevolverCarro devolucao = null;
+						try {
+							devolucao = new DevolverCarro(login);
+						} catch (RemoteException | ClassNotFoundException e1) {
+							e1.printStackTrace();
+						}
+						devolucao.listar();
+						this.dispose();
+						
+					}
 				}
 			}
 
