@@ -22,32 +22,23 @@ public class MenuClientes extends JFrame implements ActionListener {
 		this.login = login;
 		
 		setLayout(null);
-		
-		
-		
+				
 		botaoCadastro = new JButton("Cadastro");
 		botaoCadastro.setBounds(70,40,200,20);
 		botaoCadastro.setToolTipText("Menu de clientes");
 		botaoCadastro.setForeground(Color.RED);
 		botaoCadastro.addActionListener(this);
 		add(botaoCadastro);
-		
-		botaoLocacoesPorCliente = new JButton("Listar Locações");
-		botaoLocacoesPorCliente.setBounds(70,80,200,20);
-		botaoLocacoesPorCliente.setToolTipText("Menu de clientes");
-		botaoLocacoesPorCliente.setForeground(Color.RED);
-		botaoLocacoesPorCliente.addActionListener(this);
-		add(botaoLocacoesPorCliente);
 
 		botaoNovaLocacao = new JButton("Nova Locação");
-		botaoNovaLocacao.setBounds(70,120,200,20);
+		botaoNovaLocacao.setBounds(70,80,200,20);
 		botaoNovaLocacao.setToolTipText("Menu de clientes");
 		botaoNovaLocacao.setForeground(Color.RED);
 		botaoNovaLocacao.addActionListener(this);
 		add(botaoNovaLocacao);
 		
 		botaoVoltar = new JButton("Voltar");
-		botaoVoltar.setBounds(70,160,200,40);
+		botaoVoltar.setBounds(70,120,200,40);
 		botaoVoltar.setToolTipText("Menu de clientes");
 		botaoVoltar.setForeground(Color.RED);
 		botaoVoltar.addActionListener(this);
@@ -66,6 +57,7 @@ public class MenuClientes extends JFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		
 		if(e.getSource() == this.botaoCadastro) {
 			CadastraClientes cadastro= new CadastraClientes(this.login);
 			cadastro.formulario();
@@ -89,8 +81,6 @@ public class MenuClientes extends JFrame implements ActionListener {
 					}
 				}
 			}
-		}
-		
+		}	
 	}
-
 }

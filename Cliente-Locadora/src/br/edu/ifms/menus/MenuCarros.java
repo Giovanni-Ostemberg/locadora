@@ -104,7 +104,7 @@ public class MenuCarros extends JFrame implements ActionListener {
 					if(e.getSource() == this.botaoDevolucao) {
 						DevolverCarro devolucao = null;
 						try {
-							devolucao = new DevolverCarro(login);
+							devolucao = new DevolverCarro(this.login);
 						} catch (RemoteException | ClassNotFoundException e1) {
 							e1.printStackTrace();
 						}

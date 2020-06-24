@@ -43,6 +43,8 @@ public class CadastraClientes extends JFrame implements ActionListener {
 
 	public CadastraClientes(String login) {
 		setLayout(null);
+		
+		this.login = login;
 
 		//Componentes do input do nome do cliente
 		labelNome = new JLabel("Nome: ");

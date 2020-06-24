@@ -138,7 +138,7 @@ public class ListarCarrosDisponiveisPorCliente extends JFrame  implements Action
 					for(Carro c : carrosDisponiveis) {
 						if(c.getPlaca()==table.getValueAt(table.getSelectedRow(), 0)){
 							carroSelecionado = c;
-							CadastrarNovaLocacao nova = new CadastrarNovaLocacao(clienteSelecionado, locadoraSelecionada,carroSelecionado);
+							CadastrarNovaLocacao nova = new CadastrarNovaLocacao(clienteSelecionado, locadoraSelecionada,carroSelecionado, login);
 							nova.cadastro();
 							dispose();
 						}

@@ -45,10 +45,11 @@ public class CadastrarNovaLocacao extends JFrame implements ActionListener  {
 	String dataFormatada;
 
 
-	public CadastrarNovaLocacao(Cliente cliente, Locadora locadoraSelecionada, Carro carro) {
+	public CadastrarNovaLocacao(Cliente cliente, Locadora locadoraSelecionada, Carro carro, String login) {
 		this.cliente = cliente;
 		this.locadora = locadoraSelecionada;
 		this.carro = carro;
+		this.login = login;
 
 		setLayout(null);
 
